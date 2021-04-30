@@ -287,20 +287,8 @@ func (s *Set) Union(other SetInterface) (SetInterface, error) {
 
 /* Creates a copy of the current SetInterface */
 func (s *Set) Copy() (SetInterface, error) {
-	output, err := MakeSet()
-	if err != nil {
-		return nil, err
-	}
-	for value := range s.Iterate() {
-		hash, err := getSHA(value)
-		if err != nil {
-			return nil, err
-		}
-		if err = output.Add(s.values[hash]); err != nil {
-			return nil, err
-		}
-	}
-	return output, nil
+	output, err := MakeSet(s)
+	return output, err
 }
 
 /* Returns a string representation of the set. */
