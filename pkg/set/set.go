@@ -150,13 +150,7 @@ func (s *Set) Pop() (interface{}, error) {
 
 /* Clear all elements from the set. */
 func (s *Set) Clear() error {
-	for value := range s.Iterate() {
-		hash, err := getSHA(value)
-		if err != nil {
-			return err
-		}
-		delete(s.values, hash)
-	}
+	s.Init()
 	return nil
 }
 

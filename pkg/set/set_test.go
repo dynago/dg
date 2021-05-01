@@ -212,6 +212,11 @@ func TestClear(t *testing.T) {
 	if ok := printChecker(s.String(), vals); !ok {
 		t.Fatalf("Got %s, expected some sort of permutation of %v", s.String(), vals)
 	}
+
+	// Check that we can still add
+	if err := s.Add("hello"); err != nil {
+		t.Error(err)
+	}
 }
 
 func TestContains(t *testing.T) {
