@@ -311,6 +311,12 @@ func TestRange(t *testing.T) {
 		t.Fatalf("Got %s, which was unexpected", s.String())
 	}
 
+	if s, err := s1.Range(2, 0); err != nil {
+		t.Error(err)
+	} else if ok := printChecker(s.String(), []string{}); !ok {
+		t.Fatalf("Got %s, which was unexpected", s.String())
+	}
+
 	if s, err := s2.Range(0, 1); err != nil {
 		t.Error(err)
 	} else if ok := printChecker(s.String(), []string{}); !ok {

@@ -116,7 +116,7 @@ func (t *Tuple) Multiply(n int) (TupleInterface, error) {
 /* Returns the value at index. */
 func (t *Tuple) Get(i int) (interface{}, error) {
 	if i >= len(t.values) || i < 0 {
-		return nil, fmt.Errorf("Input i out of range of tuple")
+		return nil, fmt.Errorf("Index i out of range of tuple")
 	}
 	
 	return t.values[i], nil
