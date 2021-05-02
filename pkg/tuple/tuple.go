@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"internal/helpers"
 	"internal/iterable"
 )
 
@@ -88,21 +89,10 @@ func (t *Tuple) Get(i int) (interface{}, error) {
 	return t.values[i], nil
 }
 
-/* Returns a valid index given the length of the tuple. */
-func validIndex(i int, length int) int {
-	if i < 0 {
-		return 0
-	} 
-	if i > length {
-		return length
-	}
-	return i
-}
-
 /* Returns the a tuple of values given range. */
 func (t *Tuple) Range(start int, end int) (TupleInterface, error) {
-	start = validIndex(start, len(t.values))
-	end = validIndex(end, len(t.values))
+	start = helpers.ValidIndex(start, len(t.values))
+	end = helpers.ValidIndex(end, len(t.values))
 
 	output := new(Tuple)
 	output.Init()

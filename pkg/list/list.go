@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 
+	"internal/helpers"
 	"internal/iterable"
 )
 
@@ -99,21 +100,10 @@ func (l *List) Get(i int) (interface{}, error) {
 	return l.values[i], nil
 }
 
-/* Returns a valid index given the length of the list. */
-func validIndex(i int, length int) int {
-	if i < 0 {
-		return 0
-	} 
-	if i > length {
-		return length
-	}
-	return i
-}
-
 /* Returns the a list of values given range. */
 func (l *List) Range(start int, end int) (ListInterface, error) {
-	start = validIndex(start, len(l.values))
-	end = validIndex(end, len(l.values))
+	start = helpers.ValidIndex(start, len(l.values))
+	end = helpers.ValidIndex(end, len(l.values))
 
 	output := new(List)
 	output.Init()
@@ -156,11 +146,11 @@ func (l *List) Insert(i int, value interface{}) error {
 /* Sets values in given range to the values in the iterable. */
 func (l *List) Set(start int, end int, it iterable.Iterable) error {
 	if len(l.values) > 0 {
-		s := validIndex(start, len(l.values))
+		s := helpers.ValidIndex(start, len(l.values))
 		if s != start {
 			return fmt.Errorf("Index start out of range of list")
 		}
-		e := validIndex(end, len(l.values))
+		e := helpers.ValidIndex(end, len(l.values))
 		if e != end {
 			return fmt.Errorf("Index end out of range of list")
 		}
@@ -197,11 +187,11 @@ func (l *List) Remove(value interface{}) error {
 func (l *List) Delete(start int, end ...int) error {
 	var s, e int
 
-	s = validIndex(start, len(l.values))
+	s = helpers.ValidIndex(start, len(l.values))
 	if len(end) > 0 {
-		e = validIndex(end[0], len(l.values))
+		e = helpers.ValidIndex(end[0], len(l.values))
 	} else {
-		e = validIndex(s + 1, len(l.values))
+		e = helpers.ValidIndex(s + 1, len(l.values))
 	}
 
 	if e > s && e < len(l.values) {

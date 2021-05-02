@@ -3,29 +3,16 @@
 package set
 
 import (
-	"crypto/sha1"
-	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"strings"
 
+	"internal/helpers"
 	"internal/iterable"
 )
 
 
 type Set struct {
 	values map[string]interface{}
-}
-
-func getSHA(value interface{}) (string, error) {
-	b, err := json.Marshal(value)
-	if err != nil {
-		return "", err
-	}
-	hasher := sha1.New()
-	hasher.Write(b)
-	sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
-	return sha, nil
 }
 
 /* Return the value given a string representation of the bytes. */
@@ -56,7 +43,7 @@ func (s *Set) Iterate() <-chan interface{} {
 
 /* Add element to the set. */
 func (s *Set) Add(value interface{}) error {
-	hash, err := getSHA(value)
+	hash, err := helpers.GetSHA(value)
 	if err != nil {
 		return err
 	}
@@ -66,7 +53,7 @@ func (s *Set) Add(value interface{}) error {
 
 /* Remove element from the set. */
 func (s *Set) Remove(value interface{}) error {
-	hash, err := getSHA(value)
+	hash, err := helpers.GetSHA(value)
 	if err != nil {
 		return err
 	}
@@ -77,7 +64,7 @@ func (s *Set) Remove(value interface{}) error {
 /* Update the set, adding elements from the other set. */
 func (s *Set) Combine(other SetInterface) error {
 	for value := range other.Iterate() {
-		hash, err := getSHA(value)
+		hash, err := helpers.GetSHA(value)
 		if err != nil {
 			return err
 		}
@@ -89,7 +76,7 @@ func (s *Set) Combine(other SetInterface) error {
 /* Pop and return an arbitrary element from the set. */
 func (s *Set) Pop() (interface{}, error) {
 	for value := range s.Iterate() {
-		hash, err := getSHA(value)
+		hash, err := helpers.GetSHA(value)
 		if err != nil {
 			return nil, err
 		}
@@ -107,7 +94,7 @@ func (s *Set) Clear() error {
 
 /* Test for membership in the set. */
 func (s *Set) Contains(value interface{}) (bool, error) {
-	hash, err := getSHA(value)
+	hash, err := helpers.GetSHA(value)
 	if err != nil {
 		return false, err
 	}
@@ -118,7 +105,7 @@ func (s *Set) Contains(value interface{}) (bool, error) {
 /* Return true if the set has no elements in common with the other set. */
 func (s *Set) Disjoint(other SetInterface) (bool, error) {
 	for value := range other.Iterate() {
-		hash, err := getSHA(value)
+		hash, err := helpers.GetSHA(value)
 		if err != nil {
 			return false, err
 		}
@@ -145,7 +132,7 @@ func (s *Set) Equals(other SetInterface) (bool, error) {
 /* Test whether every element in the other set is in the set. */
 func (s *Set) SupersetOf(other SetInterface) (bool, error) {
 	for value := range other.Iterate() {
-		hash, err := getSHA(value)
+		hash, err := helpers.GetSHA(value)
 		if err != nil {
 			return false, err
 		}
@@ -169,7 +156,7 @@ func (s *Set) Intersection(other SetInterface) (SetInterface, error) {
 		return nil, err
 	}
 	for value := range other.Iterate() {
-		hash, err := getSHA(value)
+		hash, err := helpers.GetSHA(value)
 		if err != nil {
 			return nil, err
 		}
@@ -206,7 +193,7 @@ func (s *Set) Difference(other SetInterface) (SetInterface, error) {
 		return nil, err
 	}
 	for value := range other.Iterate() {
-		hash, err := getSHA(value)
+		hash, err := helpers.GetSHA(value)
 		if err != nil {
 			return nil, err
 		}
