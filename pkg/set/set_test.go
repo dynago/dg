@@ -71,20 +71,6 @@ func TestAdd(t *testing.T) {
 }
 
 func TestRemove(t *testing.T) {
-	s, err := MakeSet()
-	if err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(2.2); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add("hello"); err != nil {
-		t.Error(err)
-	}
-
 	type tester struct {
 		a int
 		b int
@@ -92,7 +78,9 @@ func TestRemove(t *testing.T) {
 	var test tester
 	test.a = 1
 	test.b = 2
-	if err := s.Add(test); err != nil {
+
+	s, err := MakeSetFromValues(1, 2.2, "hello", test)
+	if err != nil {
 		t.Error(err)
 	}
 
@@ -113,25 +101,13 @@ func TestRemove(t *testing.T) {
 }
 
 func TestCombine(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues("hello", 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("hello"); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
@@ -146,17 +122,8 @@ func TestCombine(t *testing.T) {
 }
 
 func TestPop(t *testing.T) {
-	s, err := MakeSet()
+	s, err := MakeSetFromValues(1, 2.2, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(2.2); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
@@ -170,7 +137,6 @@ func TestPop(t *testing.T) {
 	case 1:
 		vals = append(vals, "2.2")
 		vals = append(vals, "hello")
-		vals[1] = "hello"
 	case 2.2:
 		vals = append(vals, "1")
 		vals = append(vals, "hello")
@@ -187,17 +153,8 @@ func TestPop(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	s, err := MakeSet()
+	s, err := MakeSetFromValues(1, 2.2, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(2.2); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
@@ -220,17 +177,8 @@ func TestClear(t *testing.T) {
 }
 
 func TestContains(t *testing.T) {
-	s, err := MakeSet()
+	s, err := MakeSetFromValues(1, 2.2, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add(2.2); err != nil {
-		t.Error(err)
-	}
-	if err := s.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
@@ -247,29 +195,17 @@ func TestContains(t *testing.T) {
 }
 
 func TestDisjoint(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
 		t.Error(err)
 	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
-		t.Error(err)
-	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues(1, "hello")
 	if err != nil {
 		t.Error(err)
 	}
-	if err := s2.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("hello"); err != nil {
-		t.Error(err)
-	}
 
-	s3, err := MakeSet()
+	s3, err := MakeSetFromValues("hello")
 	if err != nil {
 		t.Error(err)
 	}
@@ -303,36 +239,18 @@ func TestDisjoint(t *testing.T) {
 }
 
 func TestEquals(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues(1, "2.2")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("2.2"); err != nil {
 		t.Error(err)
 	}
 
-	s3, err := MakeSet()
+	s3, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s3.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s3.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
@@ -379,39 +297,18 @@ func TestEquals(t *testing.T) {
 }
 
 func TestSupersetAndSubset(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues(1, "2.2")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("2.2"); err != nil {
 		t.Error(err)
 	}
 
-	s3, err := MakeSet()
+	s3, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s3.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s3.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
@@ -441,25 +338,13 @@ func TestSupersetAndSubset(t *testing.T) {
 }
 
 func TestIntersection(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues(1, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
@@ -483,25 +368,13 @@ func TestIntersection(t *testing.T) {
 }
 
 func TestDifference(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues(1, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
@@ -543,25 +416,13 @@ func TestDifference(t *testing.T) {
 }
 
 func TestUnion(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
 		t.Error(err)
 	}
 
-	s2, err := MakeSet()
+	s2, err := MakeSetFromValues(1, "hello")
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s2.Add("hello"); err != nil {
 		t.Error(err)
 	}
 
@@ -580,7 +441,7 @@ func TestUnion(t *testing.T) {
 		t.Fatalf("Got %s, expected some sort of permutation of %v", s.String(), vals)
 	}
 
-	s, err = s.Difference(s3)
+	s, err = s.Union(s3)
 	if err != nil {
 		t.Error(err)
 	}
@@ -590,14 +451,8 @@ func TestUnion(t *testing.T) {
 }
 
 func TestIterable(t *testing.T) {
-	s1, err := MakeSet()
+	s1, err := MakeSetFromValues(1, 2.2)
 	if err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(1); err != nil {
-		t.Error(err)
-	}
-	if err := s1.Add(2.2); err != nil {
 		t.Error(err)
 	}
 

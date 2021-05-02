@@ -314,3 +314,15 @@ func MakeSet(it ...iterable.Iterable) (SetInterface, error) {
 	}
 	return output, nil
 }
+
+/* Initialize a new set object */
+func MakeSetFromValues(values ...interface{}) (SetInterface, error) {
+	output := new(Set)
+	output.Init()
+	for _, val := range values {
+		if err := output.Add(val); err != nil {
+			return nil, err
+		}
+	}
+	return output, nil
+}
