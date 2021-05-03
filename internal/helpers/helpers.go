@@ -4,15 +4,24 @@ import (
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 )
 
 func GetSHA(value interface{}) (string, error) {
-	b, err := json.Marshal(value)
-	if err != nil {
-		return "", err
+	if value == nil {
+		return "", fmt.Errorf("Cannot generate SHA from nil")
+	}
+	b1, err1 := json.Marshal(value)
+	if err1 != nil {
+		return "", err1
+	}
+	b2, err2 := json.Marshal(fmt.Sprintf("%t", value))
+	if err2 != nil {
+		return "", err2
 	}
 	hasher := sha1.New()
-	hasher.Write(b)
+	hasher.Write(b1)
+	hasher.Write(b2)
 	sha := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 	return sha, nil
 }
