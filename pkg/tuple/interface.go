@@ -1,8 +1,6 @@
-// Tuple implementation by Calder Lund
-
 package tuple
 
-
+// TupleInterface is the interface which defines whether a struct is a tuple or not.
 type TupleInterface interface {
 	/* Return the number of elements in tuple. */
 	Length() int

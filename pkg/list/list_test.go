@@ -1,12 +1,9 @@
-// List implementation by Calder Lund
-
 package list
 
 import (
 	"fmt"
 	"testing"
 )
-
 
 func printChecker(str string, values []string) bool {
 	output := false
@@ -32,6 +29,7 @@ func TestMakeEmptyList(t *testing.T) {
 type listTester struct {
 	a []interface{}
 }
+
 func (test *listTester) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {

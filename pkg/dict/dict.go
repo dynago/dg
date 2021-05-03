@@ -1,5 +1,3 @@
-// Dictionary implementation by Calder Lund
-
 package dict
 
 import (
@@ -12,19 +10,18 @@ import (
 	"tuple"
 )
 
-
+// Dict is a dynamic dictionary structure.
 type Dict struct {
-	keys map[string]interface{}   // hash of key to key
+	keys   map[string]interface{} // hash of key to key
 	values map[string]interface{} // hash of key to value
 }
 
-
-/* Return the number of elements in dict. */
+/* Length - Return the number of elements in dict. */
 func (d *Dict) Length() int {
 	return len(d.keys)
 }
 
-/* Return the next key in dict. */
+/* Iterate - Return the next key in dict. */
 func (d *Dict) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {
@@ -36,7 +33,7 @@ func (d *Dict) Iterate() <-chan interface{} {
 	return c
 }
 
-/* Remove element from the dict. */
+/* Remove - Remove element from the dict. */
 func (d *Dict) Remove(key interface{}) error {
 	hash, err := helpers.GetSHA(key)
 	if err != nil {
@@ -47,7 +44,7 @@ func (d *Dict) Remove(key interface{}) error {
 	return nil
 }
 
-/* Returns the value with given key. */
+/* Get - Returns the value with given key. */
 func (d *Dict) Get(key interface{}) (interface{}, error) {
 	hash, err := helpers.GetSHA(key)
 	if err != nil {
@@ -60,7 +57,7 @@ func (d *Dict) Get(key interface{}) (interface{}, error) {
 	return value, nil
 }
 
-/* Sets the value at given key to given value. */
+/* Set - Sets the value at given key to given value. */
 func (d *Dict) Set(key interface{}, value interface{}) error {
 	hash, err := helpers.GetSHA(key)
 	if err != nil {
@@ -71,7 +68,7 @@ func (d *Dict) Set(key interface{}, value interface{}) error {
 	return nil
 }
 
-/* Update the dict, adding elements from the other dict. Old values are replaced with new. */
+/* Combine - Update the dict, adding elements from the other dict. Old values are replaced with new. */
 func (d *Dict) Combine(other DictInterface) error {
 	for key := range other.Iterate() {
 		value, err := other.Get(key)
@@ -85,7 +82,7 @@ func (d *Dict) Combine(other DictInterface) error {
 	return nil
 }
 
-/* Pop and return an arbitrary key from the dict. */
+/* PopKey - Pop and return an arbitrary key from the dict. */
 func (d *Dict) PopKey() (interface{}, error) {
 	for key := range d.Iterate() {
 		if err := d.Remove(key); err != nil {
@@ -96,7 +93,7 @@ func (d *Dict) PopKey() (interface{}, error) {
 	return nil, nil
 }
 
-/* Pop and return an arbitrary value from the dict. */
+/* PopValue - Pop and return an arbitrary value from the dict. */
 func (d *Dict) PopValue() (interface{}, error) {
 	for key := range d.Iterate() {
 		value, err := d.Get(key)
@@ -111,7 +108,7 @@ func (d *Dict) PopValue() (interface{}, error) {
 	return nil, nil
 }
 
-/* Pop and return an arbitrary item from the dict. */
+/* Pop - Pop and return an arbitrary item from the dict. */
 func (d *Dict) Pop() (interface{}, interface{}, error) {
 	for key := range d.Iterate() {
 		value, err := d.Get(key)
@@ -126,13 +123,13 @@ func (d *Dict) Pop() (interface{}, interface{}, error) {
 	return nil, nil, nil
 }
 
-/* Clear all elements from the dict. */
+/* Clear - Clear all elements from the dict. */
 func (d *Dict) Clear() error {
 	d.Init()
 	return nil
 }
 
-/* Test for membership in the dict. */
+/* Contains - Test for membership in the dict. */
 func (d *Dict) Contains(key interface{}) (bool, error) {
 	hash, err := helpers.GetSHA(key)
 	if err != nil {
@@ -142,16 +139,19 @@ func (d *Dict) Contains(key interface{}) (bool, error) {
 	return ok, nil
 }
 
-/* Return true if the dict has all elements in common with the other dict. */
+/* Equals - Return true if the dict has all elements in common with the other dict. */
 func (d *Dict) Equals(other DictInterface) (bool, error) {
 	if d.Length() != other.Length() {
 		return false, nil
 	}
 	for ok := range other.Iterate() {
-		ov, err := other.Get(ok)
-		dv, err := d.Get(ok)
-		if err != nil {
-			return false, err
+		ov, err1 := other.Get(ok)
+		if err1 != nil {
+			return false, err1
+		}
+		dv, err2 := d.Get(ok)
+		if err2 != nil {
+			return false, err2
 		}
 		if dv != ov {
 			return false, nil
@@ -160,7 +160,7 @@ func (d *Dict) Equals(other DictInterface) (bool, error) {
 	return true, nil
 }
 
-/* Returns a tuple of keys */
+/* Keys - Returns a tuple of keys */
 func (d *Dict) Keys() (tuple.TupleInterface, error) {
 	keys := make([]interface{}, 0)
 	for _, key := range d.keys {
@@ -173,7 +173,7 @@ func (d *Dict) Keys() (tuple.TupleInterface, error) {
 	return tup, nil
 }
 
-/* Returns a tuple of values. */
+/* Values - Returns a tuple of values. */
 func (d *Dict) Values() (tuple.TupleInterface, error) {
 	values := make([]interface{}, 0)
 	for _, value := range d.values {
@@ -186,7 +186,7 @@ func (d *Dict) Values() (tuple.TupleInterface, error) {
 	return tup, nil
 }
 
-/* Returns a tuple of key/value pairs. */
+/* Items - Returns a tuple of key/value pairs. */
 func (d *Dict) Items() (tuple.TupleInterface, error) {
 	l, err := list.MakeList()
 	if err != nil {
@@ -210,7 +210,7 @@ func (d *Dict) Items() (tuple.TupleInterface, error) {
 	return t, errt
 }
 
-/* Creates a copy of the current DictInterface */
+/* Copy - Creates a copy of the current DictInterface */
 func (d *Dict) Copy() (DictInterface, error) {
 	keys := make([]interface{}, 0)
 	values := make([]interface{}, 0)
@@ -226,7 +226,7 @@ func (d *Dict) Copy() (DictInterface, error) {
 	return output, err
 }
 
-/* Returns a string representation of the dict. */
+/* String - Returns a string representation of the dict. */
 func (d *Dict) String() string {
 	output := "{"
 	for key := range d.Iterate() {
@@ -240,13 +240,13 @@ func (d *Dict) String() string {
 	return output
 }
 
-/* Initializes the dict. */
+/* Init - Initializes the dict. */
 func (d *Dict) Init() {
 	d.keys = make(map[string]interface{})
 	d.values = make(map[string]interface{})
 }
 
-/* Initialize a new dict object. */
+/* MakeDict - Initialize a new dict object. */
 func MakeDict(it ...iterable.Iterable) (DictInterface, error) {
 	output := new(Dict)
 	output.Init()
@@ -255,7 +255,7 @@ func MakeDict(it ...iterable.Iterable) (DictInterface, error) {
 		iter := it[0]
 		var key interface{}
 		for v := range iter.Iterate() {
-			if i % 2 == 0 {
+			if i%2 == 0 {
 				key = v
 			} else {
 				output.Set(key, v)
@@ -266,7 +266,7 @@ func MakeDict(it ...iterable.Iterable) (DictInterface, error) {
 	return output, nil
 }
 
-/* Initialize a new dict object. */
+/* MakeDictFromKeyValues - Initialize a new dict object. */
 func MakeDictFromKeyValues(keys []interface{}, values []interface{}) (DictInterface, error) {
 	output := new(Dict)
 	output.Init()
@@ -280,7 +280,7 @@ func MakeDictFromKeyValues(keys []interface{}, values []interface{}) (DictInterf
 	return output, nil
 }
 
-/* Initialize a new dict object. */
+/* MakeDictFromItems - Initialize a new dict object. */
 func MakeDictFromItems(items ...tuple.TupleInterface) (DictInterface, error) {
 	output := new(Dict)
 	output.Init()

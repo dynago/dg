@@ -1,12 +1,9 @@
-// Tuple implementation by Calder Lund
-
 package tuple
 
 import (
 	"fmt"
 	"testing"
 )
-
 
 func printChecker(str string, values []string) bool {
 	output := false
@@ -32,6 +29,7 @@ func TestMakeEmptyTuple(t *testing.T) {
 type tupleTester struct {
 	a []interface{}
 }
+
 func (test *tupleTester) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {

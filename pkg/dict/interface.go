@@ -1,12 +1,10 @@
-// Dictionary implementation by Calder Lund
-
 package dict
 
 import (
 	"tuple"
 )
 
-
+// DictInterface is the interface which defines whether a struct is a dict or not.
 type DictInterface interface {
 	/* Return the number of elements in dict. */
 	Length() int

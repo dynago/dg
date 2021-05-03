@@ -1,10 +1,8 @@
-// List implementation by Calder Lund
-
 package list
 
 import "internal/iterable"
 
-
+// ListInterface is the interface which defines whether a struct is a list or not.
 type ListInterface interface {
 	/* Return the number of elements in list. */
 	Length() int
@@ -36,7 +34,7 @@ type ListInterface interface {
 	Insert(int, interface{}) error
 	/* Sets values in given range to the values in the iterable. */
 	Set(int, int, iterable.Iterable) error
-	/* Remove first occurence of the element from the list. */
+	/* Remove first occurrence of the element from the list. */
 	Remove(interface{}) error
 	/* Removes range from the list. Takes two parameters: start (int), end (int: optional). */
 	Delete(int, ...int) error

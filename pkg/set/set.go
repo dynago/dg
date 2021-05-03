@@ -1,5 +1,3 @@
-// Set implementation by Calder Lund
-
 package set
 
 import (
@@ -10,12 +8,12 @@ import (
 	"internal/iterable"
 )
 
-
+// Set is a dynamic set structure.
 type Set struct {
 	values map[string]interface{}
 }
 
-/* Return the value given a string representation of the bytes. */
+/* Get - Return the value given a string representation of the bytes. */
 func (s *Set) Get(hash string) interface{} {
 	value, ok := s.values[hash]
 	if !ok {
@@ -24,12 +22,12 @@ func (s *Set) Get(hash string) interface{} {
 	return value
 }
 
-/* Return the number of elements in set. */
+/* Length - Return the number of elements in set. */
 func (s *Set) Length() int {
 	return len(s.values)
 }
 
-/* Return the next key in set. */
+/* Iterate - Return the next key in set. */
 func (s *Set) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {
@@ -41,7 +39,7 @@ func (s *Set) Iterate() <-chan interface{} {
 	return c
 }
 
-/* Add element to the set. */
+/* Add - Add element to the set. */
 func (s *Set) Add(value interface{}) error {
 	hash, err := helpers.GetSHA(value)
 	if err != nil {
@@ -51,7 +49,7 @@ func (s *Set) Add(value interface{}) error {
 	return nil
 }
 
-/* Remove element from the set. */
+/* Remove - Remove element from the set. */
 func (s *Set) Remove(value interface{}) error {
 	hash, err := helpers.GetSHA(value)
 	if err != nil {
@@ -61,7 +59,7 @@ func (s *Set) Remove(value interface{}) error {
 	return nil
 }
 
-/* Update the set, adding elements from the other set. */
+/* Combine - Update the set, adding elements from the other set. */
 func (s *Set) Combine(other SetInterface) error {
 	for value := range other.Iterate() {
 		hash, err := helpers.GetSHA(value)
@@ -73,7 +71,7 @@ func (s *Set) Combine(other SetInterface) error {
 	return nil
 }
 
-/* Pop and return an arbitrary element from the set. */
+/* Pop - Pop and return an arbitrary element from the set. */
 func (s *Set) Pop() (interface{}, error) {
 	for value := range s.Iterate() {
 		hash, err := helpers.GetSHA(value)
@@ -86,13 +84,13 @@ func (s *Set) Pop() (interface{}, error) {
 	return nil, nil
 }
 
-/* Clear all elements from the set. */
+/* Clear - Clear all elements from the set. */
 func (s *Set) Clear() error {
 	s.Init()
 	return nil
 }
 
-/* Test for membership in the set. */
+/* Contains - Test for membership in the set. */
 func (s *Set) Contains(value interface{}) (bool, error) {
 	hash, err := helpers.GetSHA(value)
 	if err != nil {
@@ -102,7 +100,7 @@ func (s *Set) Contains(value interface{}) (bool, error) {
 	return ok, nil
 }
 
-/* Return true if the set has no elements in common with the other set. */
+/* Disjoint - Return true if the set has no elements in common with the other set. */
 func (s *Set) Disjoint(other SetInterface) (bool, error) {
 	for value := range other.Iterate() {
 		hash, err := helpers.GetSHA(value)
@@ -116,7 +114,7 @@ func (s *Set) Disjoint(other SetInterface) (bool, error) {
 	return true, nil
 }
 
-/* Return true if the set has all elements in common with the other set. */
+/* Equals - Return true if the set has all elements in common with the other set. */
 func (s *Set) Equals(other SetInterface) (bool, error) {
 	var ok1, ok2 bool
 	var err error
@@ -129,7 +127,7 @@ func (s *Set) Equals(other SetInterface) (bool, error) {
 	return ok1 && ok2, nil
 }
 
-/* Test whether every element in the other set is in the set. */
+/* SupersetOf - Test whether every element in the other set is in the set. */
 func (s *Set) SupersetOf(other SetInterface) (bool, error) {
 	for value := range other.Iterate() {
 		hash, err := helpers.GetSHA(value)
@@ -143,13 +141,13 @@ func (s *Set) SupersetOf(other SetInterface) (bool, error) {
 	return true, nil
 }
 
-/* Test whether every element in the set is in the other set. */
+/* SubsetOf - Test whether every element in the set is in the other set. */
 func (s *Set) SubsetOf(other SetInterface) (bool, error) {
 	ok, err := other.SupersetOf(s)
 	return ok, err
 }
 
-/* Return a new set with elements common to the set and all others. */
+/* Intersection - Return a new set with elements common to the set and all others. */
 func (s *Set) Intersection(other SetInterface) (SetInterface, error) {
 	output, err := MakeSet()
 	if err != nil {
@@ -169,7 +167,7 @@ func (s *Set) Intersection(other SetInterface) (SetInterface, error) {
 	return output, nil
 }
 
-/* Return a new set with elements in either the set or the other but not both. */
+/* SymmetricDifference - Return a new set with elements in either the set or the other but not both. */
 func (s *Set) SymmetricDifference(other SetInterface) (SetInterface, error) {
 	output, err1 := s.Difference(other)
 	if err1 != nil {
@@ -186,7 +184,7 @@ func (s *Set) SymmetricDifference(other SetInterface) (SetInterface, error) {
 	return output, nil
 }
 
-/* Return a new set with elements in the set that are not in the other set. */
+/* Difference - Return a new set with elements in the set that are not in the other set. */
 func (s *Set) Difference(other SetInterface) (SetInterface, error) {
 	output, err := s.Copy()
 	if err != nil {
@@ -207,7 +205,7 @@ func (s *Set) Difference(other SetInterface) (SetInterface, error) {
 	return output, nil
 }
 
-/* Return a new set with elements from the set and the other set. */
+/* Union - Return a new set with elements from the set and the other set. */
 func (s *Set) Union(other SetInterface) (SetInterface, error) {
 	output, err := s.Copy()
 	if err != nil {
@@ -217,13 +215,13 @@ func (s *Set) Union(other SetInterface) (SetInterface, error) {
 	return output, nil
 }
 
-/* Creates a copy of the current SetInterface */
+/* Copy - Creates a copy of the current SetInterface */
 func (s *Set) Copy() (SetInterface, error) {
 	output, err := MakeSet(s)
 	return output, err
 }
 
-/* Returns a string representation of the set. */
+/* String - Returns a string representation of the set. */
 func (s *Set) String() string {
 	output := "("
 	for _, value := range s.values {
@@ -233,12 +231,12 @@ func (s *Set) String() string {
 	return output
 }
 
-/* Initializes the set. */
+/* Init - Initializes the set. */
 func (s *Set) Init() {
 	s.values = make(map[string]interface{})
 }
 
-/* Initialize a new set object */
+/* MakeSet - Initialize a new set object */
 func MakeSet(it ...iterable.Iterable) (SetInterface, error) {
 	output := new(Set)
 	output.Init()
@@ -253,7 +251,7 @@ func MakeSet(it ...iterable.Iterable) (SetInterface, error) {
 	return output, nil
 }
 
-/* Initialize a new set object */
+/* MakeSetFromValues - Initialize a new set object */
 func MakeSetFromValues(values ...interface{}) (SetInterface, error) {
 	output := new(Set)
 	output.Init()

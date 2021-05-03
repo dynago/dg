@@ -1,8 +1,6 @@
-// Set implementation by Calder Lund
-
 package set
 
-
+// SetInterface is the interface which defines whether a struct is a set or not.
 type SetInterface interface {
 	/* Return the number of elements in set. */
 	Length() int

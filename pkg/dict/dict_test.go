@@ -1,5 +1,3 @@
-// Dictionary implementation by Calder Lund
-
 package dict
 
 import (
@@ -56,6 +54,7 @@ func TestMakeEmptyDict(t *testing.T) {
 type dictTester struct {
 	a []interface{}
 }
+
 func (test *dictTester) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {
@@ -192,7 +191,6 @@ func TestSet(t *testing.T) {
 		t.Fatalf("Got %s, expected some sort of permutation of %v", s.String(), vals)
 	}
 
-	vals = []string{"(1 -2.2)", "(hello 42)", "(100 -200.2)"}
 	if err := s.Set(nil, -2.2); err == nil {
 		t.Fatalf("Expecting error (no nil key)")
 	}
@@ -239,7 +237,7 @@ func TestPopKey(t *testing.T) {
 		t.Error(err1)
 	}
 
-	key, err := s.PopKey(); 
+	key, err := s.PopKey()
 	if err != nil {
 		t.Error(err)
 	}
@@ -269,7 +267,7 @@ func TestPopValue(t *testing.T) {
 		t.Error(err1)
 	}
 
-	value, err := s.PopValue(); 
+	value, err := s.PopValue()
 	if err != nil {
 		t.Error(err)
 	}
@@ -300,7 +298,7 @@ func TestPop(t *testing.T) {
 		t.Error(err1)
 	}
 
-	key, value, err := s.Pop(); 
+	key, value, err := s.Pop()
 	if err != nil {
 		t.Error(err)
 	} else if key != value {

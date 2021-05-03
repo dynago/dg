@@ -1,5 +1,3 @@
-// Set implementation by Calder Lund
-
 package set
 
 import (

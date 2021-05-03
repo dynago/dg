@@ -7,6 +7,7 @@ import (
 	"fmt"
 )
 
+/* GetSHA - Returns a string hash based on the given value */
 func GetSHA(value interface{}) (string, error) {
 	if value == nil {
 		return "", fmt.Errorf("Cannot generate SHA from nil")
@@ -26,11 +27,11 @@ func GetSHA(value interface{}) (string, error) {
 	return sha, nil
 }
 
-/* Returns a valid index given the length of the list. */
+/* ValidIndex - Returns a valid index given the length of the list. */
 func ValidIndex(i int, length int) int {
 	if i < 0 {
 		return 0
-	} 
+	}
 	if i > length {
 		return length
 	}
