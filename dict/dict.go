@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/CalderLund/DynamicGo/internal/helpers"
-	"github.com/CalderLund/DynamicGo/internal/iterable"
-	"github.com/CalderLund/DynamicGo/list"
-	"github.com/CalderLund/DynamicGo/tuple"
+	"github.com/dynago/dg/internal/helpers"
+	"github.com/dynago/dg/internal/iterable"
+	"github.com/dynago/dg/list"
+	"github.com/dynago/dg/tuple"
 )
 
 // Dict is a dynamic dictionary structure.

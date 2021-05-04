@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/CalderLund/DynamicGo/tuple"
+	"github.com/dynago/dg/tuple"
 )
 
 /* permutation code from https://yourbasic.org/golang/generate-permutation-slice-string/ */
