@@ -1,7 +1,7 @@
 package dict
 
 import (
-	"tuple"
+	"github.com/CalderLund/DynamicGo/tuple"
 )
 
 // DictInterface is the interface which defines whether a struct is a dict or not.

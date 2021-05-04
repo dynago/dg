@@ -1,6 +1,6 @@
 package list
 
-import "internal/iterable"
+import "github.com/CalderLund/DynamicGo/internal/iterable"
 
 // ListInterface is the interface which defines whether a struct is a list or not.
 type ListInterface interface {

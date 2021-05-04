@@ -1,11 +1,12 @@
+// Package tuple implements tuples, which are collections which are ordered and immutable.
 package tuple
 
 import (
 	"fmt"
 	"strings"
 
-	"internal/helpers"
-	"internal/iterable"
+	"github.com/CalderLund/DynamicGo/internal/helpers"
+	"github.com/CalderLund/DynamicGo/internal/iterable"
 )
 
 // Tuple is a dynamic tuple structure.
@@ -13,12 +14,12 @@ type Tuple struct {
 	values []interface{}
 }
 
-/* Length - Return the number of elements in set. */
+/* Length returns the number of elements in the tuple. */
 func (t *Tuple) Length() int {
 	return len(t.values)
 }
 
-/* Iterate - Return the next key in set. */
+/* Iterate returns the next key in the tuple. */
 func (t *Tuple) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {
@@ -30,7 +31,7 @@ func (t *Tuple) Iterate() <-chan interface{} {
 	return c
 }
 
-/* Contains - Test for membership in the tuple. */
+/* Contains tests for membership in the tuple. */
 func (t *Tuple) Contains(value interface{}) (bool, error) {
 	for _, v := range t.values {
 		if v == value {
@@ -40,7 +41,7 @@ func (t *Tuple) Contains(value interface{}) (bool, error) {
 	return false, nil
 }
 
-/* Equals - Return true if the tuple has all elements in common with the other tuple. */
+/* Equals returns true if the tuple has all elements in common with the other tuple. */
 func (t *Tuple) Equals(other TupleInterface) (bool, error) {
 	if t.Length() != other.Length() {
 		return false, nil
@@ -57,7 +58,7 @@ func (t *Tuple) Equals(other TupleInterface) (bool, error) {
 	return true, nil
 }
 
-/* Concatenate - Return concatenation of two tuples together. */
+/* Concatenate returns concatenation of two tuples together. */
 func (t *Tuple) Concatenate(other TupleInterface) (TupleInterface, error) {
 	output := new(Tuple)
 	output.Init()
@@ -68,7 +69,7 @@ func (t *Tuple) Concatenate(other TupleInterface) (TupleInterface, error) {
 	return output, nil
 }
 
-/* Multiply - Return tuple repeated n times. */
+/* Multiply returns tuple repeated n times. */
 func (t *Tuple) Multiply(n int) (TupleInterface, error) {
 	output := new(Tuple)
 	output.Init()
@@ -78,7 +79,7 @@ func (t *Tuple) Multiply(n int) (TupleInterface, error) {
 	return output, nil
 }
 
-/* Get - Returns the value at index. */
+/* Get returns the value at index. */
 func (t *Tuple) Get(i int) (interface{}, error) {
 	if i >= len(t.values) || i < 0 {
 		return nil, fmt.Errorf("Index i out of range of tuple")
@@ -87,7 +88,7 @@ func (t *Tuple) Get(i int) (interface{}, error) {
 	return t.values[i], nil
 }
 
-/* Range - Returns the a tuple of values given range. */
+/* Range returns the a tuple of values given range. */
 func (t *Tuple) Range(start int, end int) (TupleInterface, error) {
 	start = helpers.ValidIndex(start, len(t.values))
 	end = helpers.ValidIndex(end, len(t.values))
@@ -100,7 +101,7 @@ func (t *Tuple) Range(start int, end int) (TupleInterface, error) {
 	return output, nil
 }
 
-/* Index - Return first index of value. Returns -1 if not found. */
+/* Index returns first index of value. Returns -1 if not found. */
 func (t *Tuple) Index(value interface{}) (int, error) {
 	for i, v := range t.values {
 		if v == value {
@@ -110,7 +111,7 @@ func (t *Tuple) Index(value interface{}) (int, error) {
 	return -1, nil
 }
 
-/* Count - Return count of value. */
+/* Count returns count of value. */
 func (t *Tuple) Count(value interface{}) (int, error) {
 	count := 0
 	for _, v := range t.values {
@@ -121,13 +122,13 @@ func (t *Tuple) Count(value interface{}) (int, error) {
 	return count, nil
 }
 
-/* Copy - Creates a copy of the current TupleInterface. */
+/* Copy creates a copy of the current TupleInterface. */
 func (t *Tuple) Copy() (TupleInterface, error) {
 	output, err := MakeTuple(t)
 	return output, err
 }
 
-/* String - Returns a string representation of the tuple. */
+/* String returns a string representation of the tuple. */
 func (t *Tuple) String() string {
 	output := "("
 	for _, value := range t.values {
@@ -137,12 +138,12 @@ func (t *Tuple) String() string {
 	return output
 }
 
-/* Init - Initializes the tuple. */
+/* Init initializes the tuple. */
 func (t *Tuple) Init() {
 	t.values = make([]interface{}, 0)
 }
 
-/* MakeTuple - Initialize a new tuple object */
+/* MakeTuple initializes a new tuple object using an Iterable. */
 func MakeTuple(it ...iterable.Iterable) (TupleInterface, error) {
 	output := new(Tuple)
 	output.Init()
@@ -155,7 +156,7 @@ func MakeTuple(it ...iterable.Iterable) (TupleInterface, error) {
 	return output, nil
 }
 
-/* MakeTupleFromValues - Initialize a new tuple object */
+/* MakeTupleFromValues initializes a new tuple object using interface{} objects. */
 func MakeTupleFromValues(values ...interface{}) (TupleInterface, error) {
 	output := new(Tuple)
 	output.Init()

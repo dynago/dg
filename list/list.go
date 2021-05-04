@@ -1,11 +1,12 @@
+// Package list implements lists, which are mutable sequences, typically used to store collections of homogeneous items.
 package list
 
 import (
 	"fmt"
 	"strings"
 
-	"internal/helpers"
-	"internal/iterable"
+	"github.com/CalderLund/DynamicGo/internal/helpers"
+	"github.com/CalderLund/DynamicGo/internal/iterable"
 )
 
 // List is a dynamic list structure.
@@ -13,12 +14,12 @@ type List struct {
 	values []interface{}
 }
 
-/* Length - Return the number of elements in list. */
+/* Length returns the number of elements in list. */
 func (l *List) Length() int {
 	return len(l.values)
 }
 
-/* Iterate - Return the next value in list. */
+/* Iterate returns the next value in list. */
 func (l *List) Iterate() <-chan interface{} {
 	c := make(chan interface{})
 	go func() {
@@ -30,7 +31,7 @@ func (l *List) Iterate() <-chan interface{} {
 	return c
 }
 
-/* Contains - Test for membership in the list. */
+/* Contains tests for membership in the list. */
 func (l *List) Contains(value interface{}) (bool, error) {
 	for _, v := range l.values {
 		if v == value {
@@ -40,7 +41,7 @@ func (l *List) Contains(value interface{}) (bool, error) {
 	return false, nil
 }
 
-/* Equals - Return true if the list has all elements in common with the other list. */
+/* Equals returns true if the list has all elements in common with the other list. */
 func (l *List) Equals(other ListInterface) (bool, error) {
 	if l.Length() != other.Length() {
 		return false, nil
@@ -57,7 +58,7 @@ func (l *List) Equals(other ListInterface) (bool, error) {
 	return true, nil
 }
 
-/* Concatenate - Return concatenation of two lists together. */
+/* Concatenate returns concatenation of two lists together. */
 func (l *List) Concatenate(other ListInterface) (ListInterface, error) {
 	output := new(List)
 	output.Init()
@@ -68,7 +69,7 @@ func (l *List) Concatenate(other ListInterface) (ListInterface, error) {
 	return output, nil
 }
 
-/* Multiply - Return list repeated n times. */
+/* Multiply returns list repeated n times. */
 func (l *List) Multiply(n int) (ListInterface, error) {
 	output := new(List)
 	output.Init()
@@ -78,7 +79,7 @@ func (l *List) Multiply(n int) (ListInterface, error) {
 	return output, nil
 }
 
-/* Reverse - Return reversed list. */
+/* Reverse returns reversed list. */
 func (l *List) Reverse() (ListInterface, error) {
 	output := new(List)
 	output.Init()
@@ -89,7 +90,7 @@ func (l *List) Reverse() (ListInterface, error) {
 	return output, nil
 }
 
-/* Get - Returns the value at index. */
+/* Get returns the value at index. */
 func (l *List) Get(i int) (interface{}, error) {
 	if i >= len(l.values) || i < 0 {
 		return nil, fmt.Errorf("Index i out of range of list")
@@ -98,7 +99,7 @@ func (l *List) Get(i int) (interface{}, error) {
 	return l.values[i], nil
 }
 
-/* Range - Returns the a list of values given range. */
+/* Range returns the a list of values given range. */
 func (l *List) Range(start int, end int) (ListInterface, error) {
 	start = helpers.ValidIndex(start, len(l.values))
 	end = helpers.ValidIndex(end, len(l.values))
@@ -111,7 +112,7 @@ func (l *List) Range(start int, end int) (ListInterface, error) {
 	return output, nil
 }
 
-/* Index - Return first index of value. Returns -1 if not found. */
+/* Index returns first index of value. Returns -1 if not found. */
 func (l *List) Index(value interface{}) (int, error) {
 	for i, v := range l.values {
 		if v == value {
@@ -121,7 +122,7 @@ func (l *List) Index(value interface{}) (int, error) {
 	return -1, nil
 }
 
-/* Count - Return count of value. */
+/* Count returns count of value. */
 func (l *List) Count(value interface{}) (int, error) {
 	count := 0
 	for _, v := range l.values {
@@ -132,7 +133,7 @@ func (l *List) Count(value interface{}) (int, error) {
 	return count, nil
 }
 
-/* Insert - Inserts the value at index. */
+/* Insert inserts the value at index. */
 func (l *List) Insert(i int, value interface{}) error {
 	if i >= len(l.values) || i < 0 {
 		return fmt.Errorf("Index i out of range of list")
@@ -141,7 +142,7 @@ func (l *List) Insert(i int, value interface{}) error {
 	return nil
 }
 
-/* Set - Sets values in given range to the values in the iterable. */
+/* Set sets values in given range to the values in the iterable. */
 func (l *List) Set(start int, end int, it iterable.Iterable) error {
 	if len(l.values) > 0 {
 		s := helpers.ValidIndex(start, len(l.values))
@@ -167,7 +168,7 @@ func (l *List) Set(start int, end int, it iterable.Iterable) error {
 	return fmt.Errorf("Cannot set on empty list")
 }
 
-/* Remove - Remove first occurrence of the element from the list. */
+/* Remove removes first occurrence of the element from the list. */
 func (l *List) Remove(value interface{}) error {
 	i, err := l.Index(value)
 	if err != nil {
@@ -181,7 +182,7 @@ func (l *List) Remove(value interface{}) error {
 	return nil
 }
 
-/* Delete - Removes range from the list. Takes two parameters: start (int), end (int: optional). */
+/* Delete removes range from the list. Takes two parameters: start (int), end (int: optional). */
 func (l *List) Delete(start int, end ...int) error {
 	var s, e int
 
@@ -201,13 +202,13 @@ func (l *List) Delete(start int, end ...int) error {
 	return nil
 }
 
-/* Append - Appends element to the end of the list. */
+/* Append appends element to the end of the list. */
 func (l *List) Append(value interface{}) error {
 	l.values = append(l.values, value)
 	return nil
 }
 
-/* Pop - Pop and return the last element from the list. */
+/* Pop pops and returns the last element from the list. */
 func (l *List) Pop() (interface{}, error) {
 	if len(l.values) > 0 {
 		value := l.values[len(l.values)-1]
@@ -217,19 +218,19 @@ func (l *List) Pop() (interface{}, error) {
 	return nil, fmt.Errorf("Cannot pop from empty list")
 }
 
-/* Clear - Clear all elements from the list. */
+/* Clear clears all elements from the list. */
 func (l *List) Clear() error {
 	l.Init()
 	return nil
 }
 
-/* Copy - Creates a copy of the current ListInterface. */
+/* Copy creates a copy of the current ListInterface. */
 func (l *List) Copy() (ListInterface, error) {
 	output, err := MakeList(l)
 	return output, err
 }
 
-/* String - Returns a string representation of the list. */
+/* String returns a string representation of the list. */
 func (l *List) String() string {
 	output := "["
 	for _, value := range l.values {
@@ -239,12 +240,12 @@ func (l *List) String() string {
 	return output
 }
 
-/* Init - Initializes the list. */
+/* Init initializes the list. */
 func (l *List) Init() {
 	l.values = make([]interface{}, 0)
 }
 
-/* MakeList - Initialize a new list object */
+/* MakeList initializes a new list object using an Iterable object */
 func MakeList(it ...iterable.Iterable) (ListInterface, error) {
 	output := new(List)
 	output.Init()
@@ -257,7 +258,7 @@ func MakeList(it ...iterable.Iterable) (ListInterface, error) {
 	return output, nil
 }
 
-/* MakeListFromValues - Initialize a new list object */
+/* MakeListFromValues initializes a new list object using any number of values */
 func MakeListFromValues(values ...interface{}) (ListInterface, error) {
 	output := new(List)
 	output.Init()
