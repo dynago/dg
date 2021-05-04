@@ -9,5 +9,3 @@ There are 4 structures created:
 2. list
 3. set
 4. tuple
-
-Each can be found in `pkg`.
